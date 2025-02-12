@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>星光密语</title>
+//<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { 
+            margin: 0;
+            background: #000;
+            overflow: hidden;
+ position: relative; /* 建立新的层叠上下文 */
+ background: #000 !important; /* 保持星空背景 */
+        }
+
+   #prompt {
+    position: fixed;
+    top: 50%;          /* 改为垂直居中基准 */
+    left: 50%;         /* 保持水平居中基准 */
+    transform: translate(-50%, -50%);  /* 增加垂直偏移修正 */
+    color: #fff;
+    font-family: Arial;
+    text-shadow: 0 0 10px #00ffff;
+    
+    text-align: center;          /* 文字居中对齐 */
+    line-height: 3.2em;          /* 行距调整为2倍(默认1.2em) */
+    white-space: pre-line;       /* 保留换行符 */
+    
+    letter-spacing: 2px;
+-webkit-text-size-adjust: 100%;  /* 禁止iOS缩放 */
+  touch-action: manipulation;      /* 减少触控延迟 */
+-webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+width: 90vw;  /* 占视口宽度的90% */
+  max-width: 600px;  /* 设置最大宽度 */
+}
+/* 移动端适配 */
+@media (max-width: 100%) {
+#prompt {
+font-size: 0.2rem; /* 响应式字号调整[6] */
+line-height: 1.6;
+padding: 0px;
+white-space: nowrap;  /* 强制不换行 [1][2][4][5] */
+    min-width: 100px;     /* 设置最小容器宽度 */
+  }
+}
+
+   </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div id="prompt">
+✨ 星光密语 ✨
+✨ 穿越11维时空的思念 ✨
+✨ 在量子泡沫中锁定你的频率 ✨
+✨ 从此我的宇宙常数 皆以你为度量衡 ✨</div>
+
+
+    <script>
+        // 星空粒子系统（支持动态配色）[3]
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // 创建动态粒子（优化交互体验）[1]
+        const particles = new THREE.BufferGeometry();
+        const count = 5000;
+        const posArray = new Float32Array(count * 3);
+        
+        for(let i=0; i<count*3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 10;
+        }
+
+        particles.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        
+        const material = new THREE.PointsMaterial({
+            size: 0.005,
+            color: new THREE.Color().setHSL(Math.random(), 0.8, 0.6),
+            transparent: true
+        });
+
+        const points = new THREE.Points(particles, material);
+        scene.add(points);
+        camera.position.z = 5;
+
+        // 动态颜色变换（提升视觉吸引力）[4]
+        let hue = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            hue += 0.005;
+            material.color.setHSL(hue % 1, 0.8, 0.6);
+            
+            points.rotation.y += 0.001;
+            points.rotation.x += 0.0005;
+            
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // 添加鼠标交互（增强参与感）[3]
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            const mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+            points.rotation.y = mouseX * 0.5;
+            points.rotation.x = mouseY * 0.3;
+        });
+
+        // 窗口自适应（兼容移动端）[1]
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
